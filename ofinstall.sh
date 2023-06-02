@@ -90,6 +90,7 @@ expect {
 }
 EOF
 	rm -rf openvpn-install.sh
+	PORT=0
 }
 
 function frps_install(){
@@ -150,7 +151,7 @@ function frps_install(){
 EOF
 	frps start
 	rm -rf install-frps.sh
-	
+	PORT=0
 	frps_ini
 }
 
