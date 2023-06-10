@@ -87,6 +87,12 @@ expect {
 			}
 		}
 	}
+	"Option*" {
+        send "3\r"
+		expect "removal*" {
+		send "y\r"
+		exp_continue
+    }
 }
 EOF
 	rm -rf openvpn-install.sh
