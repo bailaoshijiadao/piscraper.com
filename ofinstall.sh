@@ -45,6 +45,7 @@ function get_random_port {
 function openvpn_install(){
 	apt update
 	apt install -y expect htop > /dev/null 2>&1
+	apt install -y crul
 	wget https://git.io/vpn -O openvpn-install.sh
 	chmod 700 ./openvpn-install.sh
 	get_random_port 33000 65535; #这里指定了33000~65535区间，从中任取一个未占用端口号
@@ -53,7 +54,7 @@ set timeout -1
 spawn /root/openvpn-install.sh
 expect {
     "IPv4 address*" {
-        send "1\r"
+        send "\r"
 		expect "Protocol*" {
 		send "1\r"
 		expect "*1194*" {
@@ -164,7 +165,8 @@ EOF
 function frps_ini(){
 	pwd=$(cat /usr/local/frps/frps.ini | grep dashboard_pwd | grep -v grep | awk '{print $3}')
 	token=$(cat /usr/local/frps/frps.ini | grep token | awk 'NR==2{print}'| grep -v grep | awk '{print $3}')
-	ip=$(ifconfig -a|grep inet|grep -v 127.0.0.1|grep -v inet6|grep -v 10.8.0.1|awk '{print $2}'|tr -d "addr:"|awk 'NR==1{print}')
+	#ip=$(ifconfig -a|grep inet|grep -v 127.0.0.1|grep -v inet6|grep -v 10.8.0.1|awk '{print $2}'|tr -d "addr:"|awk 'NR==1{print}')
+	ip=$(curl http://whatismyip.akamai.com)
 	cat << EOF >  /$USER/frpc.ini
 	[common]
 	server_addr =$ip
